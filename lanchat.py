@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
-import argparse
-#import socket
+import socket
 import subprocess
 import sys
-#from datetime import datetime
+
 
 class Device:
     def __init__(self, name, ipaddr, mac, interface):
@@ -53,32 +52,38 @@ def scan():
 
 
 
-def server():
+def server(ip='localhost', port=8080):
     '''
     Listen for messages sent by client
     '''
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-    server_address = ('localhost', 8080)
+#    server_address = ('localhost', 8080)
+    server_address = (ip, port)
     print('starting up on %s port %s' % server_address)
     sock.bind(server_address)
 
     while True:
-        print('waiting to receive message')
-        data, address = sock.recvfrom(4096)
-        print('received %s bytes from %s' % (len(data), address))
-        print(data)
-        if data:
-            sent = sock.sendto(data,address)
-            print('sent %s bytes back to %s' % (sent, address))
+        try:
+            print('waiting to receive message')
+            data, address = sock.recvfrom(4096)
+            print('received %s bytes from %s' % (len(data), address))
+            print(data)
+            if data:
+                sent = sock.sendto(data,address)
+                print('sent %s bytes back to %s' % (sent, address))
+        except KeyboardInterrupt:
+            print('\nShutting down server...')
+            break
 
 
-def client():
+
+def client(ip='localhost', port=8080):
     '''
     Send messages to a listening device/port
     '''
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    server_address = ('localhost', 8080)
+    #server_address = ('localhost', 8080)
+    server_address = (ip, port)
     message = 'Incoming message'
     
     try:
@@ -116,11 +121,11 @@ def main():
 
     if sys.argv[1] == '-s':
         #scan
-        print('scan')
+        #print('scan')
         scan()
     
     if sys.argv[1] == '-c':
-        print('chat')
+        #print('chat')
         chat()
 
 if __name__ == '__main__':
