@@ -1,4 +1,15 @@
 #!/usr/bin/env python
+''' 
+    lanchat.py
+
+    A program that supports scanning and UDP chat
+
+    Scanning is achieved by using the subprocess module
+    to invoke the arp command
+
+    UDP chat is achieved using the socket module for
+    sending and receving messages
+'''
 
 import socket
 import subprocess
