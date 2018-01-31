@@ -73,6 +73,7 @@ def server(ip='localhost', port=8080):
                 print('sent %s bytes back to %s' % (sent, address))
         except KeyboardInterrupt:
             print('\nShutting down server...')
+            sock.close()
             break
 
 
@@ -85,13 +86,15 @@ def client(ip='localhost', port=8080):
     #server_address = ('localhost', 8080)
     server_address = (ip, port)
     message = 'Incoming message'
-    
+
     try:
         print('sending "%s"' % message)
         sent = sock.sendto(message, server_address)
         print('waiting to receive')
         data, server = sock.recvfrom(4096)
         print('received "%s"' % data)
+    except KeyboardInterrupt:
+        print('\nKeyboard Interrupt')
     finally:
         print('closing socket')
         sock.close()
@@ -100,7 +103,7 @@ def chat():
     print('Listen or Send?')
     print('Enter l to start server')
     print('Enter s to send message')
-    user_input = raw_input()
+    user_input = raw_input('Action: ')
     if user_input == 'l':
         server()
     elif user_input == 's':
